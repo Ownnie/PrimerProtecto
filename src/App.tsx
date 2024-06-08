@@ -34,6 +34,7 @@ function App() {
     const itemExist = cart.findIndex(card => card.id === item.id)
 
     if (itemExist >= 0) {
+      if (cart[itemExist].quantity >= MAX_ITEMS) return
       const updatedCart = [...cart]
       updatedCart[itemExist].quantity++
       setCart(updatedCart)
@@ -63,11 +64,16 @@ function App() {
   }
 
   function substractFromItem(item: Item) {
-    if (item.quantity > MIN_ITEMS) {
-      setCart(prevCart => prevCart.map(card => card.id === item.id ? { ...card, quantity: card.quantity-- } : card))
-    } else {
-      setCart(prevCart => prevCart.filter(card => card.id !== item.id))
-    }
+    const cartCopy = cart.map(itemCopy => {
+      if (itemCopy.id === item.id && itemCopy.quantity > MIN_ITEMS) {
+        return {
+          ...itemCopy,
+          quantity: itemCopy.quantity - 1
+        }
+      }
+      return itemCopy
+    })
+    setCart(cartCopy)
   }
 
   function clearCart() {
