@@ -1,9 +1,18 @@
-import { useMemo } from 'react'
+import { Card, Item } from '../hooks'
 
-function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart }: any) {
+type headerProps = {
+    cart: Item[];
+    removeFromCart: (id: Card['id']) => void
+    addToItem: (id: Card['id']) => void
+    substractFromItem: (id: Card['id']) => void
+    clearCart: () => void
+    isEmpty: boolean;
+    cartTotal: number;
 
-    const isEmpty = useMemo(() => cart.length === 0, [cart])
-    const cartTotal = useMemo(() => cart.reduce((total: any, item: any) => total + (item.quantity * item.price), 0), [cart])
+}
+
+function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart, isEmpty, cartTotal }: headerProps) {
+
 
     return (
         <header className="py-5 header">

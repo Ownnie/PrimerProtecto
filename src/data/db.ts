@@ -1,4 +1,6 @@
-export const db = [
+import type { Card } from '../types'
+
+export const db: Card[] = [
     {
         id: 1,
         name: 'Lukather',

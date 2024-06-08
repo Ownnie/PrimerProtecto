@@ -1,4 +1,11 @@
-function Card({ card, addToCart }: any) {
+import type { Card } from '../types';
+
+type CardProps = {
+    card: Card,
+    addToCart: (item: Card) => void
+}
+
+function Card({ card, addToCart }: CardProps) {
 
     const { name, image, description, price } = card
 

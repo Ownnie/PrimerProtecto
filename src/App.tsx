@@ -1,89 +1,14 @@
 import './index.css'
-
-import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Card from './components/Card'
-import { db } from './data/db'
+import { useCart } from './hooks/useCart'
 
-interface Item {
-  id: number;
-  quantity: number;
-  price: number;
-}
+
 
 function App() {
 
-  const initialCart = () => {
-    const localStorageCart = localStorage.getItem('cart')
-    return localStorageCart ? JSON.parse(localStorageCart) : []
-  }
-
-  const [data] = useState(db)
-  const [cart, setCart] = useState<Item[]>(initialCart)
-  const MAX_ITEMS = 5
-  const MIN_ITEMS = 1
-
-  useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cart));
-  }, [cart])
-
-
-  function addToCart(item: Item) {
-
-    const itemExist = cart.findIndex(card => card.id === item.id)
-
-    if (itemExist >= 0) {
-      if (cart[itemExist].quantity >= MAX_ITEMS) return
-      const updatedCart = [...cart]
-      updatedCart[itemExist].quantity++
-      setCart(updatedCart)
-    } else {
-      item.quantity = 1
-      setCart([...cart, item])
-    }
-
-    saveLocalStorage()
-  }
-
-  function removeFromCart(id: any) {
-    setCart(prevCart => prevCart.filter(card => card.id !== id))
-  }
-
-  function addToItem(item: Item) {
-    const cartCopy = cart.map(itemCopy => {
-      if (itemCopy.id === item.id && itemCopy.quantity < MAX_ITEMS) {
-        return {
-          ...itemCopy,
-          quantity: itemCopy.quantity + 1
-        }
-      }
-      return itemCopy
-    })
-    setCart(cartCopy)
-  }
-
-  function substractFromItem(item: Item) {
-    const cartCopy = cart.map(itemCopy => {
-      if (itemCopy.id === item.id && itemCopy.quantity > MIN_ITEMS) {
-        return {
-          ...itemCopy,
-          quantity: itemCopy.quantity - 1
-        }
-      }
-      return itemCopy
-    })
-    setCart(cartCopy)
-  }
-
-  function clearCart() {
-    setCart([]);
-  }
-
-  function saveLocalStorage() {
-    localStorage.setItem('cart', JSON.stringify(cart))
-  }
-
+  const { data, cart, addToCart, removeFromCart, substractFromItem, addToItem, clearCart, isEmpty, cartTotal } = useCart()
   return (
     <>
       <Header
@@ -92,6 +17,8 @@ function App() {
         addToItem={addToItem}
         substractFromItem={substractFromItem}
         clearCart={clearCart}
+        isEmpty={isEmpty}
+        cartTotal={cartTotal}
       />
 
       <main className="container-xl mt-5">
@@ -102,7 +29,6 @@ function App() {
             <Card
               key={card.id}
               card={card}
-              cart={cart}
               addToCart={addToCart}
             />
           ))}
