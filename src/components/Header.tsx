@@ -1,4 +1,4 @@
-import { Card, Item } from '../types'
+import { Item } from '../types'
 import { Dispatch, useMemo } from 'react'
 import type { CartActions } from '../reducers/cart-reducer'
 
