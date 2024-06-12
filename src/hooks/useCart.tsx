@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react'
-import { db } from '../data/db'
 
 import type { Card, Item } from '../types';
 
@@ -9,8 +8,6 @@ export const useCart = () => {
         const localStorageCart = localStorage.getItem('cart')
         return localStorageCart ? JSON.parse(localStorageCart) : []
     }
-
-    const [data] = useState(db)
     const [cart, setCart] = useState(initialCart)
 
     const MAX_ITEMS = 5
@@ -74,7 +71,6 @@ export const useCart = () => {
 
 
     return {
-        data,
         cart,
         addToCart,
         removeFromCart,

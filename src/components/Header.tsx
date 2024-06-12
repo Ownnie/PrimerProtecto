@@ -1,18 +1,18 @@
-import { Card, Item } from '../hooks'
+import { Card, Item } from '../types'
+import { Dispatch, useMemo } from 'react'
+import type { CartActions } from '../reducers/cart-reducer'
+
 
 type headerProps = {
     cart: Item[];
-    removeFromCart: (id: Card['id']) => void
-    addToItem: (id: Card['id']) => void
-    substractFromItem: (id: Card['id']) => void
-    clearCart: () => void
-    isEmpty: boolean;
-    cartTotal: number;
+    dispatch: Dispatch<CartActions>;
 
 }
 
-function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart, isEmpty, cartTotal }: headerProps) {
+function Header({ cart, dispatch }: headerProps) {
 
+    const isEmpty = useMemo(() => cart.length === 0, [cart])
+    const cartTotal = useMemo(() => cart.reduce((total, item) => total + (item.quantity * item.price), 0), [cart])
 
     return (
         <header className="py-5 header">
@@ -20,7 +20,7 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
                 <div className="row justify-content-center justify-content-md-between">
                     <div className="col-8 col-md-3">
                         <a href="index.html">
-                            <img className="img-fluid" src="./public/img/logo.svg" alt="imagen logo" />
+                            <img className="img-fluid" src="./img/logo.svg" alt="imagen logo" />
                         </a>
                     </div>
                     <nav className="col-md-6 a mt-5 d-flex align-items-start justify-content-end">
@@ -45,7 +45,7 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {cart.map((card: any) => (
+                                                {cart.map((card: Item) => (
                                                     <tr key={card.id}>
                                                         <td>
                                                             <img className="img-fluid" src={`./img/${card.image}.jpg`} alt="imagen guitarra" />
@@ -58,7 +58,7 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-dark"
-                                                                onClick={() => substractFromItem(card)}
+                                                                onClick={() => dispatch({ type: 'substractFromItem', payload: { item: card } })}
                                                             >
                                                                 -
                                                             </button>
@@ -66,7 +66,7 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-dark"
-                                                                onClick={() => addToItem(card)}
+                                                                onClick={() => dispatch({ type: 'addToItem', payload: { item: card } })}
                                                             >
                                                                 +
                                                             </button>
@@ -75,7 +75,7 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
                                                             <button
                                                                 className="btn btn-danger"
                                                                 type="button"
-                                                                onClick={() => removeFromCart(card.id)}
+                                                                onClick={() => dispatch({ type: 'removeFromCart', payload: { id: card.id } })}
                                                             >
                                                                 X
                                                             </button>
@@ -92,15 +92,15 @@ function Header({ cart, removeFromCart, addToItem, substractFromItem, clearCart,
 
                                 <button
                                     className="btn btn-dark w-100 mt-3 p-2"
-                                    onClick={clearCart}>
+                                    onClick={() => dispatch({ type: 'clearCart' })}>
                                     Vaciar Carrito
                                 </button>
                             </div>
                         </div>
                     </nav>
                 </div>
-            </div>
-        </header>
+            </div >
+        </header >
     )
 }
 

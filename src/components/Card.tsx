@@ -1,11 +1,15 @@
 import type { Card } from '../types';
+import { CartActions } from '../reducers/cart-reducer';
+
+import { Dispatch } from 'react';
 
 type CardProps = {
     card: Card,
-    addToCart: (item: Card) => void
+
+    dispatch: Dispatch<CartActions>
 }
 
-function Card({ card, addToCart }: CardProps) {
+function Card({ card, dispatch }: CardProps) {
 
     const { name, image, description, price } = card
 
@@ -21,7 +25,7 @@ function Card({ card, addToCart }: CardProps) {
                 <button
                     type="button"
                     className="btn btn-dark w-100"
-                    onClick={() => addToCart(card)}
+                    onClick={() => dispatch({ type: 'addToCart', payload: { item: card } })}
                 >Agregar al Carrito</button>
             </div>
         </div >

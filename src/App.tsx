@@ -2,34 +2,37 @@ import './index.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Card from './components/Card'
-import { useCart } from './hooks/useCart'
+import { cartReducer, initialState } from './reducers/cart-reducer'
+
+import { useReducer, useEffect } from 'react'
 
 
 
 function App() {
 
-  const { data, cart, addToCart, removeFromCart, substractFromItem, addToItem, clearCart, isEmpty, cartTotal } = useCart()
+  const [state, dispatch] = useReducer(cartReducer, initialState)
+
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(state.cart));
+  }, [state.cart])
+
   return (
     <>
       <Header
-        cart={cart}
-        removeFromCart={removeFromCart}
-        addToItem={addToItem}
-        substractFromItem={substractFromItem}
-        clearCart={clearCart}
-        isEmpty={isEmpty}
-        cartTotal={cartTotal}
+        cart={state.cart}
+        dispatch={dispatch}
+
       />
 
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
         <div className="row mt-5">
-          {data.map((card: any) => (
+          {state.data.map((card: Card) => (
             <Card
               key={card.id}
               card={card}
-              addToCart={addToCart}
+              dispatch={dispatch}
             />
           ))}
         </div>
